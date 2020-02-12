@@ -1,3 +1,12 @@
-/**
- * Created by Brayan on 01/02/2020.
- */
+function othertopics()
+{
+
+    if($('#other').prop('checked') ) {
+        $('#othertopic').css('display','block');
+    }
+    else
+    {
+        $('#othertopic').css('display','none');
+    }
+
+}

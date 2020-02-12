@@ -1,3 +1,9 @@
 .margin{
     margin: 50px;
 }
+.cursor{
+    cursor: pointer;
+}
+.display{
+    display: none;
+}

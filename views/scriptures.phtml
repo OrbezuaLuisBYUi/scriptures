@@ -31,13 +31,59 @@
         </ul>
         <form method="post" action="<?php echo htmlspecialchars('index.php?operation=detail'); ?>" class="form-inline my-2 my-lg-0">
             <input class="form-control mr-sm-2" type="search" name="search" placeholder="Search Book" aria-label="Search">
-            <button class="btn btn-warning text-white my-2 my-sm-0" type="submit">
+            <button class="btn btn-warning text-white my-2 my-sm-0" type="submit" title="Search scripture">
                 <a class="fa fa-search" id="amountTotal">
                 </a>
             </button>
         </form>
+        &nbsp;
+        <button class="btn btn-warning text-white my-2 my-sm-0" type="button" title="Add scripture" data-toggle="modal" data-target="#modalscripture">
+            <a class="fa fa-plus-square">
+            </a>
+        </button>
     </div>
 </nav>
+<!-- Modal -->
+<div class="modal fade" id="modalscripture" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">NEW SCRIPTURE</h4>
+                <button type="button" class="close" data-dismiss="modal">Go to Scriptures</button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="<?php echo htmlspecialchars("index.php?operation=addscripture"); ?>">
+                    Book:<br>
+                    <input name="book" type="text" class="form-control" placeholder="Book">
+                    Chapter:<br>
+                    <input name="chapter" type="text" class="form-control" placeholder="Chapter">
+                    Verse:<br>
+                    <input name="verse" type="text" class="form-control" placeholder="Verse">
+                    Content:<br>
+                    <textarea name="content" id="note" rows="5" class="form-control" placeholder="Content"></textarea>
+                    Topic:<br>
+                    <?php
+                    $data=$script->returnTopics();
+                    foreach($data as $dat) {
+                        ?>
+                        <?php echo "<label for='".$dat["id"]."' class='cursor'>".$dat["name"].": "; ?><input type="checkbox" name="topics[]" id="<?php echo $dat["id"]; ?>" value="<?php echo $dat["id"]; ?>"></label>
+                    <?php
+                    }
+                    ?>
+                    <label for='other' class='cursor'>Other: <input type="checkbox" onclick="othertopics()" name="other" id="other" value="other"></label>
+                    <input name="othertopic" id="othertopic" type="text" class="form-control display" style="display: none" placeholder="Other topic">
+                    <br>
+                    <button type="submit" class="btn btn-info form-control">ADD SCRIPTURE</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 <h1><strong>Scriptures resources</strong></h1>
 <div class="box-body">
     <div class="box-group" id="accordion">
@@ -45,13 +91,22 @@
             <div id="div1" class="div box-header with-border border border-primary ">
             <?php
             $data=$script->showScriptures("");
-            $i = 0;
+
             foreach($data as $dat) {
-                $i++;
+                $i = 0;
                 ?>
                 <div>
                     <div class="box-body">
-                        <?php echo "<strong>".$dat['book']." ".$dat['chapter'].":".$dat['verse'].' - </strong>"'.$dat['content'].'"<br><br>'; ?>
+                        <?php echo "<strong>".$dat['book']." ".$dat['chapter'].":".$dat['verse'].' - </strong>"'.$dat['content'].'"<br>'; ?>
+                        <strong>Topics:</strong>
+                        <?php
+                        $topics=$script->showTopics($dat['id']);
+                        foreach($topics as $top) {
+                            $i++;
+                            echo "<br>Topic ".$i.": ".$top['name'];
+                        }
+                        ?>
+                        <br><br>
                     </div>
                 </div>
                 <?php
